@@ -127,18 +127,21 @@ CONTAINER ID        IMAGE               COMMAND                  CREATED        
 ```
 FROM cptactionhank/atlassian-confluence:latest 
 USER root
-```
+
 
 # 将代理破解包加入容器
 COPY "atlassian-agent.jar" /opt/atlassian/confluence/
 
 # 设置启动加载代理包
 RUN echo 'export CATALINA_OPTS="-javaagent:/opt/atlassian/confluence/atlassian-agent.jar ${CATALINA_OPTS}"' >> /opt/atlassian/confluence/bin/setenv.sh
+```
+
 3.2 下载atlassian-agent.jar文件（提取密码：88bq），放置在Dockerfile同目录下，例如：
+```
 --CONF
   --Dockerfile
   --atlassian-agent.jar
-
+```
 3.3 构建镜像，执行命令
 ``` 
 docker build -t confluence/confluence:7.0.0 .
@@ -151,9 +154,11 @@ docker build -t confluence/confluence:7.0.0 .
 3.5 访问http://ip:8090，参照前面JIRA配置流程进行设置，安装过程可与JIRA关联
 3.6 生成授权码
 # 设置产品类型：-p conf， 详情可执行：java -jar atlassian-agent.jar 
+
 ```
-java -jar atlassian-agent.jar -d -m liangjiangji@dongriaf.com -n j -p conf -o http://10.0.5.36 -s BLFI-DH5F-3QKA-1921
+java -jar atlassian-agent.jar -d -m me@robinjiang.com -n j -p conf -o http://193.112.34.27:8090/ -s B5GW-P80S-JD08-DV3D
 ```
+
 3.7进入Confluence容器，并新建/home/confluence/文件夹
 
 ```
