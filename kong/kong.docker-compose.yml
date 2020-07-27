@@ -13,7 +13,7 @@ services:
       KONG_CASSANDRA_CONTACT_POINTS: kong-database
       KONG_DATABASE: postgres
       KONG_PG_HOST: kong-database
-      KONG_PG_PASSWORD: psql_password
+      KONG_PG_PASSWORD: kong
       KONG_PROXY_LISTEN: "0.0.0.0:8000"
       KONG_PROXY_LISTEN_SSL: "0.0.0.0:8443"
     healthcheck: 
@@ -35,9 +35,9 @@ services:
     restart: always
   kong-database: 
     environment: 
-      POSTGRES_DB: dbname
-      POSTGRES_PASSWORD: psql_password
-      POSTGRES_USER: username
+      POSTGRES_DB: kong
+      POSTGRES_PASSWORD: kong
+      POSTGRES_USER: kong
     healthcheck: 
       interval: 5s
       retries: 5
@@ -63,7 +63,7 @@ services:
       KONG_CASSANDRA_CONTACT_POINTS: kong-database
       KONG_DATABASE: postgres
       KONG_PG_HOST: kong-database
-      KONG_PG_PASSWORD: psql_password
+      KONG_PG_PASSWORD: kong
     image: "kong:latest"
     links: 
       - kong-database
@@ -75,10 +75,10 @@ services:
       - kong-database
     environment: 
       DB_ADAPTER: postgres
-      DB_DATABASE: konga_db
+      DB_DATABASE: kong
       DB_HOST: kong-database
-      DB_PASSWORD: psql_password
-      DB_USER: username
+      DB_PASSWORD: kong
+      DB_USER: kong
       NODE_ENV: production
       TOKEN_SECRET: km1GUr4RkcQD7DewhJPNXrCuZwcKmqjb
     image: "pantsel/konga:latest"
@@ -87,7 +87,7 @@ services:
     ports: 
       - "1337:1337"
   konga-prepare: 
-    command: "-c prepare -a postgres -u postgresql://username:psql_password@kong-database:5432/konga_db"
+    command: "-c prepare -a postgres -u postgresql://kong:kong@kong-database:5432/konga_db"
     depends_on: 
       - kong-database
     image: "pantsel/konga:next"
