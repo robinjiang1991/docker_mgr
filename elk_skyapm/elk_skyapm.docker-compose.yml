@@ -1,0 +1,54 @@
+services: 
+  elasticsearch: 
+    container_name: elasticsearch
+    environment: 
+      - discovery.type=single-node
+      - bootstrap.memory_lock=true
+      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+    image: "docker.elastic.co/elasticsearch/elasticsearch:6.8.1"
+    ports: 
+      - "9200:9200"
+      - "9300:9300"
+    restart: always
+    ulimits: 
+      memlock: 
+        hard: -1
+        soft: -1
+  kibana: 
+    container_name: kibana
+    environment: 
+      ELASTICSEARCH_URL: "http://elasticsearch:9200"
+    image: "docker.elastic.co/kibana/kibana:6.8.1"
+    ports: 
+      - "5601:5601"
+    restart: always
+    links:
+      - elasticsearch
+  oap: 
+    container_name: oap
+    depends_on: 
+      - elasticsearch
+    environment: 
+      SW_STORAGE: elasticsearch
+      SW_STORAGE_ES_CLUSTER_NODES: "elasticsearch:9200"
+    image: "apache/skywalking-oap-server:6.4.0"
+    links: 
+      - elasticsearch
+    ports: 
+      - "11800:11800"
+      - "12800:12800"
+    restart: always
+  ui: 
+    container_name: ui
+    depends_on: 
+      - oap
+    environment: 
+      SW_OAP_ADDRESS: "oap:12800"
+    image: "apache/skywalking-ui:6.4.0"
+    links: 
+      - oap
+    ports: 
+      - "8080:8080"
+    restart: always
+version: "3.3"
+
