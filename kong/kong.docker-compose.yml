@@ -87,7 +87,7 @@ services:
     ports: 
       - "1337:1337"
   konga-prepare: 
-    command: "-c prepare -a postgres -u postgresql://kong:kong@kong-database:5432/konga_db"
+    command: "-c prepare -a postgres -u postgresql://kong:kong@kong-database:5432/kong"
     depends_on: 
       - kong-database
     image: "pantsel/konga:next"
