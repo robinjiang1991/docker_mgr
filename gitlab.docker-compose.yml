@@ -1,0 +1,32 @@
+version: '3.1'
+
+services:
+  gitlab-ce:
+    image: gitlab/gitlab-ce
+    container_name: gitlab-ce
+    ports:
+      - 8080:80
+      - 8443:443
+      - 8022:22
+    volumes:
+      - /root/gitlab-ce/home/data:/var/opt/gitlab
+      - /root/gitlab-ce/home/logs:/var/log/gitlab
+      - /root/gitlab-ce/home/config:/etc/gitlab
+    restart: always
+    cap_add:
+      - ALL
+    environment:
+      GITLAB_OMNIBUS_CONFIG: |
+#配置此参数，可以解决在创建项目时，gitlab以容器ID为域名的问题
+        external_url 'http://robinjiang.com'
+        gitlab_rails['gitlab_shell_ssh_port'] = 8022
+        gitlab_rails['smtp_enable'] = true
+        gitlab_rails['smtp_address'] = "smtp.exmail.qq.com"
+        gitlab_rails['smtp_port'] = 465
+        gitlab_rails['smtp_user_name'] = "xxxx@xx.com"
+        gitlab_rails['smtp_password'] = "password"
+        gitlab_rails['smtp_authentication'] = "login"
+        gitlab_rails['smtp_enable_starttls_auto'] = true
+        gitlab_rails['smtp_tls'] = true
+        gitlab_rails['gitlab_email_from'] = 'xxxx@xx.com'
+        unicorn['worker_processes'] = 2
